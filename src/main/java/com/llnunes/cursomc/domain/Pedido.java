@@ -1,22 +1,22 @@
 package com.llnunes.cursomc.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class Categoria implements Serializable {
+public class Pedido implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,23 +26,34 @@ public class Categoria implements Serializable {
 	private Integer id;
 	
 	@Getter @Setter
-	private String nome;
-		
+	private Date instante;
+	
 	@Getter @Setter
-	@JsonManagedReference
-	@ManyToMany(mappedBy = "categorias")
-	private List<Produto> produtos = new ArrayList<>();
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "pedido")
+	private Pagamento pagamento;
+	
+	@Getter @Setter
+	@ManyToOne
+	@JoinColumn(name = "cliente_id")
+	private Cliente cliente;
+	
+	@Getter @Setter
+	@ManyToOne
+	@JoinColumn(name = "endereco_de_entrega_id")
+	private Endereco enderecoEntrega;
 
-	public Categoria() {
-		super();
+	public Pedido() {
 	}
 	
-	public Categoria(Integer id, String nome) {
+	public Pedido(Integer id, Date instante, Pagamento pagamento, Cliente cliente, Endereco enderecoEntrega) {
 		super();
 		this.id = id;
-		this.nome = nome;
+		this.instante = instante;
+		this.pagamento = pagamento;
+		this.cliente = cliente;
+		this.enderecoEntrega = enderecoEntrega;
 	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -59,12 +70,13 @@ public class Categoria implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Pedido other = (Pedido) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}	
+	}
+	
 }

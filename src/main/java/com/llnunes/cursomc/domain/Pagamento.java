@@ -1,48 +1,49 @@
 package com.llnunes.cursomc.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.llnunes.cursomc.domain.enums.EstadoPagamento;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class Categoria implements Serializable {
-
+@Inheritance(strategy = InheritanceType.JOINED)
+public class Pagamento implements Serializable{
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Getter @Setter
 	private Integer id;
 	
 	@Getter @Setter
-	private String nome;
-		
-	@Getter @Setter
-	@JsonManagedReference
-	@ManyToMany(mappedBy = "categorias")
-	private List<Produto> produtos = new ArrayList<>();
+	private EstadoPagamento estado;
 
-	public Categoria() {
-		super();
+	@MapsId
+	@OneToOne
+	@JoinColumn(name = "pedido_id")
+	@Getter @Setter
+	private Pedido pedido;
+	
+	public Pagamento() {
 	}
 	
-	public Categoria(Integer id, String nome) {
+	public Pagamento(Integer id, EstadoPagamento estado, Pedido pedido) {
 		super();
 		this.id = id;
-		this.nome = nome;
-	}
-
+		this.estado = estado;
+		this.pedido = pedido;
+	}	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -59,12 +60,12 @@ public class Categoria implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Pagamento other = (Pagamento) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}	
+	}
 }
