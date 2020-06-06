@@ -15,7 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.llnunes.cursomc.domain.enums.TipoCliente;
 
 import lombok.Getter;
@@ -42,8 +42,7 @@ public class Cliente implements Serializable {
 	
 	private Integer tipo;
 
-	@Getter @Setter
-	@JsonManagedReference
+	@Getter @Setter	
 	@OneToMany(mappedBy = "cliente")	
 	private List<Endereco> enderecos = new ArrayList<>();
 	
@@ -53,6 +52,7 @@ public class Cliente implements Serializable {
 	@Column(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
+	@JsonIgnore
 	@Getter @Setter
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();

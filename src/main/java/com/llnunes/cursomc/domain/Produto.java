@@ -2,7 +2,9 @@ package com.llnunes.cursomc.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -24,26 +28,27 @@ public class Produto implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Getter
-	@Setter
+	@Getter	@Setter
 	private Integer id;
 
-	@Getter
-	@Setter
+	@Getter	@Setter
 	private String nome;
 
-	@Getter
-	@Setter
+	@Getter	@Setter
 	private Double preco;
 
-	@Getter
-	@Setter
-	@JsonBackReference
+	@JsonIgnore
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA", 
 		joinColumns = @JoinColumn(name = "produto_id"), 
 		inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+	@Getter @Setter
 	private List<Categoria> categorias = new ArrayList<>();
+	
+	@Getter @Setter
+	@OneToMany(mappedBy = "id.produto")
+	@JsonIgnore
+	private Set<ItemPedido> itens = new HashSet<>();
 
 	public Produto(Integer id, String nome, Double preco) {
 		super();
@@ -55,6 +60,15 @@ public class Produto implements Serializable {
 	public Produto() {
 		super();
 	}
+	
+	@JsonIgnore
+	public List<Pedido> getPedidos(){
+		List<Pedido> lista = new ArrayList<>();
+		for(ItemPedido ip: itens) {
+			lista.add(ip.getPedido());
+		}
+		return lista;
+	}	
 
 	@Override
 	public int hashCode() {

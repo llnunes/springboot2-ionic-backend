@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -42,7 +42,7 @@ public class Endereco implements Serializable {
 	@Getter @Setter
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
-	@JsonBackReference
+	@JsonIgnore
 	private Cliente cliente;
 	
 	@Getter @Setter

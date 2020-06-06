@@ -1,14 +1,9 @@
 package com.llnunes.cursomc.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,29 +11,43 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class Estado implements Serializable{
+public class ItemPedido implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Getter @Setter
-	private Integer id;
-	@Getter @Setter
-	private String nome;
-	
-	@OneToMany(mappedBy = "estado")
-	@Getter @Setter
-	@JsonIgnore
-	private List<Cidade> cidades = new ArrayList<>();
-	
-	public Estado() {
-	}
 
-	public Estado(Integer id, String nome) {
+	@JsonIgnore
+	@EmbeddedId
+	@Getter @Setter	
+	private ItemPedidoPK id = new ItemPedidoPK();
+	
+	@Getter @Setter
+	private Double desconto;
+	
+	@Getter @Setter
+	private Integer quantidade;
+	
+	@Getter @Setter
+	private Double preco;
+
+	public ItemPedido() {
+	}
+	
+	public ItemPedido(Pedido pedido, Produto produto, Double desconto, Integer quantidade, Double preco) {
 		super();
-		this.id = id;
-		this.nome = nome;
+		this.id.setPedido(pedido);
+		this.id.setProduto(produto);
+		this.desconto = desconto;
+		this.quantidade = quantidade;
+		this.preco = preco;
+	}	
+	
+	@JsonIgnore
+	public Pedido getPedido () {
+		return this.id.getPedido();
+	}
+	
+	public Produto getProduto () { 
+		return this.id.getProduto();
 	}
 
 	@Override
@@ -57,7 +66,7 @@ public class Estado implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Estado other = (Estado) obj;
+		ItemPedido other = (ItemPedido) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
