@@ -6,70 +6,77 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.llnunes.cursomc.domain.enums.TipoCliente;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class Produto implements Serializable {
+public class Cliente implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Getter	@Setter
-	private Integer id;
-
-	@Getter	@Setter
-	private String nome;
-
-	@Getter	@Setter
-	private Double preco;
-
-	@JsonIgnore
-	@ManyToMany
-	@JoinTable(name = "PRODUTO_CATEGORIA", 
-		joinColumns = @JoinColumn(name = "produto_id"), 
-		inverseJoinColumns = @JoinColumn(name = "categoria_id"))
 	@Getter @Setter
-	private List<Categoria> categorias = new ArrayList<>();
+	private Integer id;
 	
 	@Getter @Setter
-	@OneToMany(mappedBy = "id.produto")
-	@JsonIgnore
-	private Set<ItemPedido> itens = new HashSet<>();
+	private String nome;
+	
+	@Getter @Setter	
+	private String email;
+	
+	@Getter @Setter	
+	private String cpfCnpj;
+	
+	private Integer tipo;
 
-	public Produto(Integer id, String nome, Double preco) {
+	@Getter @Setter	
+	@OneToMany(mappedBy = "cliente")	
+	private List<Endereco> enderecos = new ArrayList<>();
+	
+	@Getter @Setter
+	@ElementCollection
+	@CollectionTable(name= "TELEFONE")
+	@Column(name = "TELEFONE")
+	private Set<String> telefones = new HashSet<>();
+	
+	@JsonIgnore
+	@Getter @Setter
+	@OneToMany(mappedBy = "cliente")
+	private List<Pedido> pedidos = new ArrayList<>();
+	
+	public Cliente() {
+	}
+		
+	public Cliente(Integer id, String nome, String email, String cpfCnpj, TipoCliente tipo) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.preco = preco;
-	}
-
-	public Produto() {
-		super();
+		this.email = email;
+		this.cpfCnpj = cpfCnpj;
+		this.tipo = tipo.getCod();
 	}
 	
-	@JsonIgnore
-	public List<Pedido> getPedidos(){
-		List<Pedido> lista = new ArrayList<>();
-		for(ItemPedido ip: itens) {
-			lista.add(ip.getPedido());
-		}
-		return lista;
-	}	
+	public TipoCliente getTipo() {
+		return TipoCliente.toEnum(tipo);
+	}
 
+	public void setTipo(TipoCliente tipo) {
+		this.tipo = tipo.getCod();
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -86,12 +93,12 @@ public class Produto implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Produto other = (Produto) obj;
+		Cliente other = (Cliente) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
+	}	
 }

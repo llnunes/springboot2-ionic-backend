@@ -8,33 +8,34 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-public class Categoria implements Serializable {
+public class Estado implements Serializable{
 
 	private static final long serialVersionUID = 1L;
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Getter @Setter
 	private Integer id;
-	
 	@Getter @Setter
 	private String nome;
-		
-	@Getter @Setter	
-	@ManyToMany(mappedBy = "categorias")
-	private List<Produto> produtos = new ArrayList<>();
-
-	public Categoria() {
-		super();
-	}
 	
-	public Categoria(Integer id, String nome) {
+	@OneToMany(mappedBy = "estado")
+	@Getter @Setter
+	@JsonIgnore
+	private List<Cidade> cidades = new ArrayList<>();
+	
+	public Estado() {
+	}
+
+	public Estado(Integer id, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -56,7 +57,7 @@ public class Categoria implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Categoria other = (Categoria) obj;
+		Estado other = (Estado) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
