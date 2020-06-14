@@ -20,7 +20,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.llnunes.cursomc.domain.Categoria;
 import com.llnunes.cursomc.dto.CategoriaDTO;
 import com.llnunes.cursomc.services.CategoriaService;
-import com.llnunes.cursomc.services.exception.ObjectNotFoundException;
 
 @RestController
 @RequestMapping(value = "/categorias")
@@ -30,10 +29,8 @@ public class CategoriaResource {
 	private CategoriaService categoriaService;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseEntity<?> find(@PathVariable Integer id) throws ObjectNotFoundException {
-
+	public ResponseEntity<?> find(@PathVariable Integer id) {
 		Categoria c = categoriaService.findById(id);
-
 		return ResponseEntity.ok(c);
 	}
 
