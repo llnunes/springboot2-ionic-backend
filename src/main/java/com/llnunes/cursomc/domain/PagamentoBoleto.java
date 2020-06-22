@@ -5,12 +5,14 @@ import java.util.Date;
 import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.llnunes.cursomc.domain.enums.EstadoPagamento;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
+@JsonTypeName("pagamentoBoleto")
 public class PagamentoBoleto extends Pagamento {
 
 	private static final long serialVersionUID = 1L;
