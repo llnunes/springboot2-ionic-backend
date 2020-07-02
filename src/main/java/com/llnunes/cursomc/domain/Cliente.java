@@ -43,6 +43,10 @@ public class Cliente implements Serializable {
 	private String cpfCnpj;
 	
 	private Integer tipo;
+	
+	@JsonIgnore
+	@Getter @Setter	
+	private String senha;
 
 	@Getter @Setter	
 	@OneToMany(mappedBy = "cliente", cascade=CascadeType.ALL)	
@@ -62,13 +66,14 @@ public class Cliente implements Serializable {
 	public Cliente() {
 	}
 	
-	public Cliente(Integer id, String nome, String email, String cpfCnpj, TipoCliente tipo) {
+	public Cliente(Integer id, String nome, String email, String cpfCnpj, TipoCliente tipo, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.cpfCnpj = cpfCnpj;
 		this.tipo = (tipo != null) ? tipo.getCod() : null;
+		this.senha = senha;
 	}	
 
 	public TipoCliente getTipo() {
