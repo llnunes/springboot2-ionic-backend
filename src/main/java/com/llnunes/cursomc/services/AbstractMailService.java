@@ -84,5 +84,6 @@ public abstract class AbstractMailService implements EmailService {
 		mmh.setSentDate(new Date(System.currentTimeMillis()));
 		mmh.setText(htmlFromTemplatePedido(obj), true);
 		return mimeMessage;
+//		return null;
 	}
 }
