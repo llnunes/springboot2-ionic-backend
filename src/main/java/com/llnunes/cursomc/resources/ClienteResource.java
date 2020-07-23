@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.llnunes.cursomc.domain.Cliente;
@@ -23,18 +24,18 @@ import com.llnunes.cursomc.dto.ClienteDTO;
 import com.llnunes.cursomc.services.ClienteService;
 
 @RestController
-@RequestMapping(value="/clientes")
+@RequestMapping(value = "/clientes")
 public class ClienteResource {
 
 	@Autowired
 	private ClienteService clienteService;
-	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable Integer id) {
-		Cliente c = clienteService.findById(id);				
+		Cliente c = clienteService.findById(id);
 		return ResponseEntity.ok(c);
 	}
-	
+
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody ClienteDTO dto) {
 		Cliente obj = clienteService.fromDTO(dto);
@@ -62,13 +63,15 @@ public class ClienteResource {
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> findAll() {
 		List<Cliente> lista = clienteService.findAll();
-		List<ClienteDTO> listaDto = lista.stream().map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
+		List<ClienteDTO> listaDto = lista.stream()
+				.map(obj -> new ClienteDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listaDto);
 	}
 
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value = "/page", method = RequestMethod.GET)
-	public ResponseEntity<?> findAll(@RequestParam(value = "page", defaultValue = "0") Integer page,
+	public ResponseEntity<?> findAll(
+			@RequestParam(value = "page", defaultValue = "0") Integer page,
 			@RequestParam(value = "linesPage", defaultValue = "24") Integer linesPage,
 			@RequestParam(value = "orderBy", defaultValue = "nome") String orderBy,
 			@RequestParam(value = "direction", defaultValue = "ASC") String direction) {
@@ -78,5 +81,11 @@ public class ClienteResource {
 
 		return ResponseEntity.ok().body(listDto);
 	}
-	
+
+	@RequestMapping(value = "/picture", method = RequestMethod.POST)
+	public ResponseEntity<Void> uploadProfilePicture(
+			@RequestParam(name = "file") MultipartFile file) {
+		URI uri = clienteService.uploadProfilePicture(file);
+		return ResponseEntity.created(uri).build();
+	}
 }

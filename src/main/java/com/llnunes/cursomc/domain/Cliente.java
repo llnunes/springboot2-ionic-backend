@@ -70,6 +70,9 @@ public class Cliente implements Serializable {
 	@CollectionTable(name= "PERFIS")
 	private Set<Integer> perfis = new HashSet<>();
 	
+	@Getter @Setter
+	private String imageUrl;
+	
 	public Cliente() {
 		addPerfil(Perfil.CLIENTE);
 	}	
