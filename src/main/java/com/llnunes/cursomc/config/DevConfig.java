@@ -28,7 +28,8 @@ public class DevConfig {
 			return false;
 		}
 		
-		return service.createTestDatabase();
+		service.instantiateTestDatabase();
+		return true;
 	}
 	
 	@Bean

@@ -23,7 +23,8 @@ public class TestConfig {
 
 	@Bean
 	public boolean createTestDatabase() throws ParseException {
-		return service.createTestDatabase();
+		service.instantiateTestDatabase();
+		return true;
 	}
 
 	@Bean
