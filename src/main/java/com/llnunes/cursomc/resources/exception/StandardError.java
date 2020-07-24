@@ -5,27 +5,26 @@ import java.io.Serializable;
 import lombok.Getter;
 import lombok.Setter;
 
-public class StandardError implements Serializable{
-
+public class StandardError implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
+
+	@Getter @Setter
+	private Long timestamp;
 	@Getter @Setter
 	private Integer status;
-	
 	@Getter @Setter
-	private String msg;
-	
+	private String error;
 	@Getter @Setter
-	private Long timeStamp;
-
-	public StandardError() {
+	private String message;
+	@Getter @Setter
+	private String path;
+	
+	public StandardError(Long timestamp, Integer status, String error, String message, String path) {
 		super();
-	}
-
-	public StandardError(Integer status, String msg, Long timeStamp) {
-		super();
+		this.timestamp = timestamp;
 		this.status = status;
-		this.msg = msg;
-		this.timeStamp = timeStamp;
+		this.error = error;
+		this.message = message;
+		this.path = path;
 	}
 }
